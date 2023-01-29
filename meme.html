@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>:: Meme :: </title>
+</head>
+
+<body>
+
+<input type="file" id="foto" onchange="preview()" />
+<hr>
+<canvas id="card_canvas"></canvas>
+<p style="display: none" id="t">
+  <input type="text" id="text" placeholder="Enter Text" value="Default">
+  <button onclick="updateText()" id="">Apply</button>
+</p>
+<p style="display: none" id="p"> 
+  <input type="text" id="lebar" size=12 placeholder="Width" value="250"> | 
+  <input type="text" id="panjang" size=12 placeholder="Height" value="300"> 
+  <button onclick="updateWH()" id="">Update</button>
+  <button onclick="save()" id="btn">Save</button></p>
+</body>
+
+<script type="text/javascript">
+
+let image;  
+
+function calc_image_size(video) {
+    let y = 1;
+    if (video.endsWith('==')) {
+        y = 2
+    }
+    let x_size = (video.length * (3 / 4)) - y
+    return Math.round(x_size / 1024)
+}
+
+function updateText(){
+      let le =  document.getElementById("lebar").value;
+      let pa =  document.getElementById("panjang").value; 
+      let text =  document.getElementById("text").value; 
+      updateImage(localStorage.getItem("images"), le, pa, text); 
+}
+
+function updateWH(){
+      let le =  document.getElementById("lebar").value;
+      let pa =  document.getElementById("panjang").value;
+      let text =  document.getElementById("text").value; 
+      updateImage(localStorage.getItem("images"), le, pa, text); 
+}
+
+function preview(){
+    document.getElementById("p").style='display:block';
+    document.getElementById("t").style='display:block';
+    let im = document.getElementById("foto");
+    let text = "Default";
+    let reader = new FileReader();
+    reader.addEventListener("load",()=>{
+        updateImage(reader.result,250,300,text)
+        localStorage.setItem("images",reader.result);
+    }, {once:true});
+    reader.readAsDataURL(im.files[0]);
+  }
+
+
+function updateImage(img,l,p,t){
+  let canvas = document.getElementById('card_canvas');
+  canvas.width = 250;
+  canvas.height = 300;
+  let ctx = canvas.getContext('2d');
+  let image = new Image();
+    image.addEventListener("load", function() {
+    ctx.drawImage(image, 0, 0,l,p);
+    ctx.font = "20px Georgia";
+    ctx.fillText(t, 50, 200);
+  });
+  image.src = img;
+}
+
+
+function save(){
+  const rand = (Math.random() * 134536348674647387);
+      const myCanvas = document.querySelector("#card_canvas");
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = myCanvas.toDataURL("image/jpeg");
+      a.download = rand+".jpeg";
+      a.click();
+      document.body.removeChild(a);
+      localStorage.clear();
+}
+
+
+
+</script>
+
+</html>
