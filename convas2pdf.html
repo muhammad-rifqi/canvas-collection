@@ -1,0 +1,22 @@
+<canvas id="myCanvas" width="400" height="600"></canvas>
+<button onclick="save()">download</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+<script>
+var canv = document.getElementById('myCanvas');
+var context = canv.getContext('2d');
+var image = new Image();
+image.src='upload/gambar.jpg';
+image.addEventListener("load", function() {
+context.drawImage(image, 0, 0, 400, 600);
+});
+
+
+function save(){
+  var ctx = document.getElementById('myCanvas').getContext('2d');
+  var imgdata = ctx.canvas.toDataURL("image/jpeg");
+  var pdf = new jsPDF();
+  //var pdf = new jsPDF('p', 'px', 'a4');
+  pdf.addImage(imgdata, 'JPEG', 15, 40, 180, 180);
+  pdf.save("download.pdf");
+};
+</script>
