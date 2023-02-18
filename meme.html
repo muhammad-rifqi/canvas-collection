@@ -1,92 +1,106 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>:: Meme :: </title>
+  <title>:: Meme :: </title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 
 <body>
-
-<input type="file" id="foto" onchange="preview()" />
-<hr>
-<canvas id="card_canvas"></canvas>
-<p style="display: none" id="t">
-  <input type="text" id="text" placeholder="Enter Text" value="Default">
-  <button onclick="updateText()" id="">Apply</button>
-</p>
-<p style="display: none" id="p"> 
-  <input type="text" id="lebar" size=12 placeholder="Width" value="250"> | 
-  <input type="text" id="panjang" size=12 placeholder="Height" value="300"> 
-  <button onclick="updateWH()" id="">Update</button>
-  <button onclick="save()" id="btn">Save</button></p>
+  <h2 align="center">Meme Javascript</h2>
+  <hr>
+  <p align="center">
+    <button class="btn btn-primary" onclick="chooseFile()">Pilih Gambar</button>
+    <input type="file" name="photo" id="foto" class="form" onchange="preview()" accept="image/png, image/jpeg" hidden />
+  </p>
+  <hr>
+  <p align="center"><canvas id="card_canvas"></canvas></p>
+  <p style="display: none" id="t" align="center">
+    <input class="form" type="text" id="text" placeholder="Enter Text" value="Default">
+    <button onclick="updateText()" id="" class="btn btn-primary">Apply</button>
+  </p>
+  <p style="display: none" id="p" align="center">
+    <input class="form" type="text" id="lebar" size=12 placeholder="Width" value="300"> |
+    <input class="form" type="text" id="panjang" size=12 placeholder="Height" value="300">
+    <button onclick="updateWH()" id="" class="btn btn-primary">Update</button>
+    <button onclick="save()" id="btn" class="btn btn-primary">Download Image</button>
+  </p>
 </body>
 
 <script type="text/javascript">
 
-let image;  
+  let image;
 
-function calc_image_size(video) {
-    let y = 1;
-    if (video.endsWith('==')) {
-        y = 2
-    }
-    let x_size = (video.length * (3 / 4)) - y
-    return Math.round(x_size / 1024)
-}
+  // function calc_image_size(video) {
+  //   let y = 1;
+  //   if (video.endsWith('==')) {
+  //     y = 2
+  //   }
+  //   let x_size = (video.length * (3 / 4)) - y
+  //   return Math.round(x_size / 1024)
+  // }
 
-function updateText(){
-      let le =  document.getElementById("lebar").value;
-      let pa =  document.getElementById("panjang").value; 
-      let text =  document.getElementById("text").value; 
-      updateImage(localStorage.getItem("images"), le, pa, text); 
-}
+  function chooseFile() {
+    var file = document.getElementsByName("photo")[0];
+    file.click();
+  }
 
-function updateWH(){
-      let le =  document.getElementById("lebar").value;
-      let pa =  document.getElementById("panjang").value;
-      let text =  document.getElementById("text").value; 
-      updateImage(localStorage.getItem("images"), le, pa, text); 
-}
+  function updateText() {
+    let le = document.getElementById("lebar").value;
+    let pa = document.getElementById("panjang").value;
+    let text = document.getElementById("text").value;
+    updateImage(localStorage.getItem("images"), le, pa, text);
+  }
 
-function preview(){
-    document.getElementById("p").style='display:block';
-    document.getElementById("t").style='display:block';
+  function updateWH() {
+    let le = document.getElementById("lebar").value;
+    let pa = document.getElementById("panjang").value;
+    let text = document.getElementById("text").value;
+    updateImage(localStorage.getItem("images"), le, pa, text);
+  }
+
+  function preview() {
+    document.getElementById("p").style = 'display:block';
+    document.getElementById("t").style = 'display:block';
     let im = document.getElementById("foto");
     let text = "Default";
     let reader = new FileReader();
-    reader.addEventListener("load",()=>{
-        updateImage(reader.result,250,300,text)
-        localStorage.setItem("images",reader.result);
-    }, {once:true});
+    reader.addEventListener("load", () => {
+      updateImage(reader.result, 300, 300, text)
+      localStorage.setItem("images", reader.result);
+    }, { once: true });
     reader.readAsDataURL(im.files[0]);
   }
 
 
-function updateImage(img,l,p,t){
-  let canvas = document.getElementById('card_canvas');
-  canvas.width = 250;
-  canvas.height = 300;
-  let ctx = canvas.getContext('2d');
-  let image = new Image();
-    image.addEventListener("load", function() {
-    ctx.drawImage(image, 0, 0,l,p);
-    ctx.font = "20px Georgia";
-    ctx.fillText(t, 50, 200);
-  });
-  image.src = img;
-}
+  function updateImage(img, l, p, t) {
+    let canvas = document.getElementById('card_canvas');
+    canvas.width = 300;
+    canvas.height = 300;
+    let ctx = canvas.getContext('2d');
+    let image = new Image();
+    image.addEventListener("load", function () {
+      ctx.drawImage(image, 0, 0, l, p);
+      ctx.font = "30px Comic Sans MS";
+      ctx.fillStyle = "white";
+      ctx.fillText(t, 15, 80);
+    });
+    image.src = img;
+  }
 
 
-function save(){
-  const rand = (Math.random() * 134536348674647387);
-      const myCanvas = document.querySelector("#card_canvas");
-      const a = document.createElement('a');
-      document.body.appendChild(a);
-      a.href = myCanvas.toDataURL("image/jpeg");
-      a.download = rand+".jpeg";
-      a.click();
-      document.body.removeChild(a);
-      localStorage.clear();
-}
+  function save() {
+    const rand = (Math.random() * 134536348674647387);
+    const myCanvas = document.querySelector("#card_canvas");
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.href = myCanvas.toDataURL("image/jpeg");
+    a.download = rand + ".jpeg";
+    a.click();
+    document.body.removeChild(a);
+    localStorage.clear();
+  }
 
 
 
