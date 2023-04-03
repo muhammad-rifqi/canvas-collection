@@ -2,30 +2,63 @@
 <html>
 
 <head>
-  <title>:: Meme :: </title>
+  <title>:: Editor :: </title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
     integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 </head>
 
 <body>
-  <h2 align="center">Meme Javascript</h2>
-  <hr>
-  <p align="center">
-    <button class="btn btn-primary" onclick="chooseFile()">Pilih Gambar</button>
-    <input type="file" name="photo" id="foto" class="form" onchange="preview()" accept="image/png, image/jpeg" hidden />
-  </p>
-  <hr>
-  <p align="center"><canvas id="card_canvas"></canvas></p>
-  <p style="display: none" id="t" align="center">
-    <input class="form" type="text" id="text" placeholder="Enter Text" value="Default">
-    <button onclick="updateText()" id="" class="btn btn-primary">Apply</button>
-  </p>
-  <p style="display: none" id="p" align="center">
-    <input class="form" type="text" id="lebar" size=12 placeholder="Width" value="300"> |
-    <input class="form" type="text" id="panjang" size=12 placeholder="Height" value="300">
-    <button onclick="updateWH()" id="" class="btn btn-primary">Update</button>
-    <button onclick="save()" id="btn" class="btn btn-primary">Download Image</button>
-  </p>
+  <div class="container">
+    <h2 align="left">Editor Javascript</h2>
+    <hr>
+
+    <div class="row">
+      <div class="col-md-4">
+        <p align="left">
+          <button class="btn btn-primary" onclick="chooseFile()">Pilih Gambar</button>
+          <input type="file" name="photo" id="foto" class="form" onchange="preview()" accept="image/png, image/jpeg"
+            hidden />
+        </p>
+        <hr>
+
+        <p style="display: none" id="t" align="left">
+          <input class="form" type="text" id="text" placeholder="Enter Text" value="Default">
+          <button onclick="updateText()" id="" class="btn btn-primary">Update</button>
+        </p>
+        <p style="display: none" id="p" align="left">
+          <input class="form" type="text" id="lebar" size=12 placeholder="Width" value="300"> 
+          <input class="form" type="text" id="panjang" size=12 placeholder="Height" value="300"> 
+          <button onclick="updateWH()" id="" class="btn btn-primary">Update</button>
+        </p>
+
+        <hr>
+
+        <p style="display: none" id="z" align="left">
+          Brightness : <input id="val" type="range" min="0" max="200" step="1" value="50" onchange="changeBrightness()"> <br>
+          Grayscale : <input id="val" type="range" min="0" max="100" step="1" value="50" onchange="changeGrayscale()"> <br>
+          Opacity : <input id="val" type="range" min="0" max="100" step="1" value="0" onchange="changeOpacity()"> <br>
+          Invert : <input id="val" type="range" min="0" max="100" step="1" value="0" onchange="changeInvert()">
+        </p>
+
+
+        <p style="display: none" id="r" align="left">
+          <button onclick="download()" id="btn" class="btn btn-primary">Download Image</button> 
+        </p>
+
+        <hr>
+
+      </div>
+
+      <div class="col-md-8 text-center">
+        <p align="center"><canvas id="card_canvas"></canvas></p>
+      </div>
+
+
+    </div>
+
+
+
+  </div>
 </body>
 
 <script type="text/javascript">
@@ -41,6 +74,43 @@
   //   return Math.round(x_size / 1024)
   // }
 
+  function changeBrightness(){
+    let le = document.getElementById("lebar").value;
+    let pa = document.getElementById("panjang").value;
+    let text = document.getElementById("text").value;
+    let va = document.getElementById('val').value;
+    let filters = "brightness("+va+"%)";
+    updateImage(localStorage.getItem("images"), le, pa, text, filters);
+  }
+
+  function changeGrayscale(){
+    let le = document.getElementById("lebar").value;
+    let pa = document.getElementById("panjang").value;
+    let text = document.getElementById("text").value;
+    let va = document.getElementById('val').value;
+    let filters = "grayscale("+va+"%)";
+    updateImage(localStorage.getItem("images"), le, pa, text, filters); 
+  }
+
+  function changeOpacity(){
+    let le = document.getElementById("lebar").value;
+    let pa = document.getElementById("panjang").value;
+    let text = document.getElementById("text").value;
+    let va = document.getElementById('val').value;
+    let filters = "opacity("+va+"%)";
+    updateImage(localStorage.getItem("images"), le, pa, text, filters); 
+  }
+
+  function changeInvert(){
+    let le = document.getElementById("lebar").value;
+    let pa = document.getElementById("panjang").value;
+    let text = document.getElementById("text").value;
+    let va = document.getElementById('val').value;
+    let filters = "invert("+va+"%)";
+    updateImage(localStorage.getItem("images"), le, pa, text, filters);
+  }
+
+
   function chooseFile() {
     var file = document.getElementsByName("photo")[0];
     file.click();
@@ -50,21 +120,33 @@
     let le = document.getElementById("lebar").value;
     let pa = document.getElementById("panjang").value;
     let text = document.getElementById("text").value;
-    updateImage(localStorage.getItem("images"), le, pa, text);
+    let filters = "";
+    if (le > 300 || pa > 300 || text == "") {
+      alert("Attribute too big or Text Empty"); return false;
+    } else {
+      updateImage(localStorage.getItem("images"), le, pa, text, filters);
+    }
   }
 
   function updateWH() {
     let le = document.getElementById("lebar").value;
     let pa = document.getElementById("panjang").value;
     let text = document.getElementById("text").value;
-    updateImage(localStorage.getItem("images"), le, pa, text);
+    let filters = "";
+    if (le > 300 || pa > 300 || text == "") {
+      alert("Attribute too big or Text Empty"); return false;
+    } else {
+      updateImage(localStorage.getItem("images"), le, pa, text, filters);
+    }
   }
 
   function preview() {
     document.getElementById("p").style = 'display:block';
     document.getElementById("t").style = 'display:block';
+    document.getElementById("r").style = 'display:block';
+    document.getElementById("z").style = 'display:block';
     let im = document.getElementById("foto");
-    let text = "Default";
+    let text = "Entri Text Here";
     let reader = new FileReader();
     reader.addEventListener("load", () => {
       updateImage(reader.result, 300, 300, text)
@@ -74,23 +156,25 @@
   }
 
 
-  function updateImage(img, l, p, t) {
+  function updateImage(img, l, p, t, f) {
     let canvas = document.getElementById('card_canvas');
     canvas.width = 300;
     canvas.height = 300;
     let ctx = canvas.getContext('2d');
     let image = new Image();
     image.addEventListener("load", function () {
+      ctx.filter = f ;
       ctx.drawImage(image, 0, 0, l, p);
-      ctx.font = "30px Comic Sans MS";
+      ctx.font = "20px Comic Sans MS";
       ctx.fillStyle = "white";
-      ctx.fillText(t, 15, 80);
+      ctx.fillText(t, 15, 30);
+      
     });
     image.src = img;
   }
 
 
-  function save() {
+  function download() {
     const rand = (Math.random() * 134536348674647387);
     const myCanvas = document.querySelector("#card_canvas");
     const a = document.createElement('a');
