@@ -56,3 +56,30 @@ window.addEventListener("load", () => {
     canvas.addEventListener("mousemove",draw);
 
 })
+
+
+function render(){
+	const myCanvas = document.querySelector("#kanva");
+	const ctx = myCanvas.toDataURL("image/png");
+	var image = document.getElementById('foto');
+	image.src = ctx;
+	var hr = new XMLHttpRequest();
+	hr.open("POST", "proses.php", true);
+	hr.onreadystatechange = function() {
+		if(hr.readyState == 4 && hr.status == 200) {
+			alert("Oke");
+		}
+	}
+	hr.send(ctx);
+}
+
+function save(){
+	const myCanvas = document.querySelector("#kanva");
+	const a = document.createElement('a');
+	document.body.appendChild(a);
+	a.href = myCanvas.toDataURL("image/png");
+	a.download = "canvas.png";
+	a.click();
+	document.body.removeChild(a);
+	
+}
